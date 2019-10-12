@@ -40,6 +40,8 @@ def print_status(character):
     print('defence: ' + str(character.defence))
     print(f'your purse currently holds {character.gold}')
     print(str(character.inventory.item_list))
+    for item in (character.inventory.item_list):
+        print (item)
     print('')
 
 def combat_attack(attacker,defender):
