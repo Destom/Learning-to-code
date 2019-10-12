@@ -58,7 +58,12 @@ def combat_victory(opponent):
     opponent.health = opponent.max_health
     combat_reward = random.choice(opponent.inventory.item_list)
     print (f'for your victory you win {combat_reward}')
-    character_lib.item_lib.inventory_user.item_list.append(combat_reward)
+    print (type(combat_reward))
+    if type(combat_reward) == str:
+        character_lib.item_lib.inventory_user.item_list.append(combat_reward)
+    elif type(combat_reward) == int:
+        character_lib.user.gold += combat_reward
+
 
 def combat_action(opponent):
     character_lib.user.attack = character_lib.user.stat_attack
