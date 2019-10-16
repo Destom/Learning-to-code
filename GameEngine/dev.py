@@ -18,10 +18,16 @@ while (choice != 'x'):
     print ('You chose ' +  choice)
 
     if (choice == '1'):
+        actions.wiper()
         actions.arena()
     elif (choice == '2'):
+        actions.wiper()
         actions.print_status(character_lib.user)
     elif (choice == '3'):
+        actions.wiper()
         actions.combat_victory(character_lib.ROUS)
     elif (choice == '4'):
+        actions.wiper()
         actions.home_store.enter()
+    elif (choice == 'x'):
+        exit()
