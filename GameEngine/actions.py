@@ -20,16 +20,17 @@ I have {self.gold} gold if you would like to sell anything to me''')
     3 - Leave''')
             store_choice = str(input('Your choice: '))
             if (store_choice == '1'):
-                print(f'''I currently have
-{self.inventory.item_list}
-what would you like to buy?''')
-                store_purchase_choice = str(input('Your choice: '))
+                self.store_buy()
             elif (store_choice == '2'):
                 print(f'''I currently have {self.gold} gold.
                 what would you like to sell?''' )
 
-
-
+     def store_buy(self):
+        print(f'''I currently have {self.inventory.item_list}
+what would you like to buy?''')
+        store_purchase_choice = str(input('Your choice: '))
+        if self.inventory.item_list.count(store_purchase_choice) > 0:
+            print('I have one of those')
 
 home_store = store('home store',item_lib.inventory_basic,50)
 
@@ -38,7 +39,7 @@ def print_status(character):
     print('health: ' + str(character.health) + '/' + str(character.max_health))
     print('attack: ' + str(character.attack))
     print('defence: ' + str(character.defence))
-    print(f'your purse currently holds {character.gold}')
+    print(f'purse currently holds {character.gold}')
     print(str(character.inventory.item_list))
     print('')
 
@@ -52,11 +53,16 @@ def combat_defence(attacker):
     print (str(attacker.name) + " defence is now " + str(attacker.defence))
 
 def combat_victory(opponent):
+    wiper()
     print('well done you have vanquished the ' + opponent.name)
     opponent.health = opponent.max_health
     combat_reward = random.choice(opponent.inventory.item_list)
     print (f'for your victory you win {combat_reward}')
-    character_lib.item_lib.inventory_user.item_list.append(combat_reward)
+    print (type(combat_reward))
+    if type(combat_reward) == str:
+        character_lib.item_lib.inventory_user.item_list.append(combat_reward)
+    elif type(combat_reward) == int:
+        character_lib.user.gold += combat_reward
 
 def combat_action(opponent):
     character_lib.user.attack = character_lib.user.stat_attack
@@ -110,15 +116,19 @@ def use_item(item_to_use):
         character_lib.user.health +=  item_to_use.health_up
     else:
         character_lib.user.health = character_lib.user.max_health
-    character_lib.inventory.remove(item_to_use.name)
+    item_lib.inventory_user.item_list.remove(item_to_use.name)
     print_status(character_lib.user)
 
 def select_item():
     print('in your inventory you have:')
-    print('(1) ' + str(character_lib.inventory.count('potion')) + ' potion(s)')
+    print('(1) ' + str(item_lib.inventory_user.item_list.count('potion')) + ' potion(s)')
     item_to_use = input('what item would you like to use?:')
     if (item_to_use == '1'):
-        if (character_lib.inventory.count('potion') >0):
+        if (item_lib.inventory_user.item_list.count('potion') >0):
             use_item(item_lib.potion)
         else:
             print("You don't have enough of those")
+
+def wiper():
+                for line in range(1,100):
+                    print('')
