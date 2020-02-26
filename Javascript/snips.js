@@ -6,6 +6,7 @@ line comment
 
 // "\" is the escape charater
 a = "5"
+<<<<<<< HEAD
 parseInt(a); //will turn a to a string you need to store it as a vairable if you want to reuse
 
 a= 5.tostring(/*anything in here will be the base number when converting to a sting*/); //will convert to a string
@@ -107,3 +108,20 @@ for (var i = 1 ; i < 10 ; i++ ){
   }
 
 //break jumps out of a loop and continue will not run a single itteration.
+=======
+parseint(a); //will turn a to a tring you need to store it as a vairable if you want to reuse
+
+a= 5.tostring(/*anything in here will be the base number when converting to a sting*/); //will convert to a string
+
+prompt('this will as a question you tyoe an answer for')
+
+var name = 'destom';
+console.log('Welcome ' + name);
+console.log(typeof name)
+
+console.log("this will show up in the console")
+
+#alert('this is a string');
+
+#document.body.innerHTML = "hello world";
+>>>>>>> 917e08817dc8c8666fefd20e99a7d752c3d9637a
