@@ -27,12 +27,16 @@ I have {self.gold} gold if you would like to sell anything to me''')
 
      def store_buy(self):
         print(f'''I currently have {self.inventory.item_list}
-what would you like to buy?''')
+            you have {character_lib.user.gold}
+            what would you like to buy?''')
         store_purchase_choice = str(input('Your choice: '))
         if self.inventory.item_list.count(store_purchase_choice) > 0:
             print('I have one of those')
+            self.inventory.item_list.remove(store_purchase_choice)
+            print(f'''my new inventory is {self.inventory.item_list}''')
+            item_lib.inventory_user.item_list.append(store_purchase_choice)
 
-home_store = store('home store',item_lib.inventory_basic,50)
+home_store = store('home store',item_lib.inventory_lots,50)
 
 def print_status(character):
     print('name: ' + character.name)
