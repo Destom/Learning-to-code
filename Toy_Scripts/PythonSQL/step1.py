@@ -9,6 +9,8 @@ c.execute('''CREATE TABLE characters
 
 # Insert a row of data
 c.execute("INSERT INTO characters VALUES ('bob','10','2','1','item_lib.inventory_user','50','1','1','1')")
+c.execute("INSERT INTO characters VALUES ('mouse','2','1','1','item_lib.inventory_gold','50','1','1','1')")
+c.execute("INSERT INTO characters VALUES ('rat','10','2','1','item_lib.inventory_basic','50','1','1','1')")
 
 # Save (commit) the changes
 conn.commit()
