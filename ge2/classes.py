@@ -11,7 +11,7 @@ class character:
         self.defence = stat_defence
 
 class item:
-    def __init__(self,name,value,max_health_up,health_up):
+    def __init__(self, name='rubbish', value=0, max_health_up=0, health_up=0):
         self.name = name
         self.value = value
         self.max_health_up = max_health_up
@@ -55,13 +55,6 @@ I have {self.gold} gold if you would like to sell anything to me''')
             self.inventory.item_list.remove(store_purchase_choice)
             print(f'''my new inventory is {self.inventory.item_list}''')
             item_lib.inventory_user.item_list.append(store_purchase_choice)
-
-class item:
-    def __init__(self,name,value,max_health_up,health_up):
-        self.name = name
-        self.value = value
-        self.max_health_up = max_health_up
-        self.health_up = health_up
 
 class inventory:
     def __init__(self,name,item_list):

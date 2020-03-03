@@ -1,13 +1,13 @@
-#! /usr/bin/python3.7
+#! /usr/bin/python3.8
 import actions
 import classes
 
-
 #items
-potion = classes.item('potion',10,0,5)
-super_potion = classes.item('super_potion',20,0,10)
+potion = classes.item(name='potion', value=10, health_up=5)
+super_potion = classes.item(name='super_potion',value=20, health_up=10)
 
 #Inventories
+character_inventory={'potion':1}
 inventory_user = classes.inventory('character_inventory',["potion"])
 inventory_basic = classes.inventory("inventory_basic",['potion'])
 inventory_advanced = classes.inventory("inventory_advanced",['potion','super_potion'])
@@ -15,7 +15,7 @@ inventory_lots = classes.inventory("inventory_lots",['potion','potion','potion',
 inventory_gold = classes.inventory("inventory_gold",[50])
 
 #Characters
-user = classes.character('bob',10,2,1,inventory_user,50)
+user = classes.character('bob',10,2,1,character_inventory,50)
 mouse =  classes.character('mouse',2,1,1,inventory_gold)
 rat =  classes.character('rat',10,2,1,inventory_basic)
 ROUS =  classes.character('ROUS',15,4,1,inventory_advanced)

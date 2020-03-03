@@ -1,33 +1,13 @@
 import classes
 import random
 
-#items
-potion = classes.item('potion',10,0,5)
-super_potion = classes.item('super_potion',20,0,10)
-
-#Inventories
-inventory_user = classes.inventory('character_inventory',["potion"])
-inventory_basic = classes.inventory("inventory_basic",['potion'])
-inventory_advanced = classes.inventory("inventory_advanced",['potion','super_potion'])
-inventory_lots = classes.inventory("inventory_lots",['potion','potion','potion','potion','super_potion','super_potion','super_potion','super_potion'])
-inventory_gold = classes.inventory("inventory_gold",[50])
-
-#Characters
-user = classes.character('bob',10,2,1,inventory_user,50)
-mouse =  classes.character('mouse',2,1,1,inventory_gold)
-rat =  classes.character('rat',10,2,1,inventory_basic)
-ROUS =  classes.character('ROUS',15,4,1,inventory_advanced)
-
-#Stores
-home_store =  classes.store('home store',inventory_lots,50)
-
 def print_status(character):
     print('name: ' + character.name)
     print('health: ' + str(character.health) + '/' + str(character.max_health))
     print('attack: ' + str(character.attack))
     print('defence: ' + str(character.defence))
     print(f'purse currently holds {character.gold}')
-    print(str(character.inventory.item_list))
+    print(str(character.inventory))
     print('')
 
 def combat_attack(attacker,defender):
@@ -116,5 +96,5 @@ def select_item():
             print("You don't have enough of those")
 
 def wiper():
-                for line in range(1,100):
-                    print('')
+    for line in range(1,100):
+        print('')
