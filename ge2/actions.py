@@ -63,7 +63,7 @@ who would you like to fighh?
     opponent_choice = str(input('please select your opponent: '))
 
     if (opponent_choice == '1'):
-        opponent = mouse
+        opponent = my_list
     elif (opponent_choice == '2'):
         opponent = rat
     elif (opponent_choice == '3'):

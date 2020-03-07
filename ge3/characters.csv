@@ -1,0 +1,5 @@
+name,health,attack,defence,inventory,gold,max_health,stat_attack,stat_defence
+bob,10,2,1,character_inventory,50,,,
+mouse,2,1,1,inventory_gold,,,,
+rat,10,2,1,inventory_basic,,,,
+ROUS,15,4,1,inventory_advanced,,,,
