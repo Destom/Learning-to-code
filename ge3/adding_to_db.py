@@ -69,6 +69,7 @@ with open('characters.csv') as csv_file:
                 f'8) Stat Attack: {stat_attack}\n'
                 f'9) Stat Defence{stat_defence})\n')
             line_count += 1
+            defaults()
     print(f'Processed {line_count} lines.')
 
 
