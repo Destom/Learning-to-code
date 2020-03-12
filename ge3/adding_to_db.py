@@ -1,11 +1,8 @@
 import csv
-import sqlite3
-conn = sqlite3.connect('objects.db')
-c = conn.cursor()
+import dbconn
 
 #defaults
 def defaults():
-    global table
     global name
     global health
     global stat_attack
@@ -15,7 +12,6 @@ def defaults():
     global max_health
     global attack
     global defence
-    table='characters'
     name='def_name'
     health = 10
     stat_attack = 2
@@ -26,48 +22,28 @@ def defaults():
     attack = 2
     defence = 1
 defaults()
-
+hollow = ('def_name',10,2,1,'def_inventory',10,10,2,1)
 
 def choose(stat):
     #return(f'Current {stat} is ' + eval(stat))
     stat = input('what would you like the name to be? ')
-"""
-try:
-    print(f'trying to find table: {table}')
-    c.execute(f'select * FROM {table}')
-    print('Why I no find table')
-except:
-    c.execute(f'''CREATE TABLE {table}
-            (name,health,attack,defence,inventory,gold,max_health,stat_attack,stat_defence)''')
-    print(f'{table}')"""
 
 with open('characters.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     for row in csv_reader:
         if line_count == 0:
-            print(f'Column names are {", ".join(row)}')
+            print(f'Column names are: \n{", ".join(row)}')
             line_count += 1
         else:
-            name = row[0]
-            health = row[1]
-            attack = row[2]
-            defence = row[3]
-            inventory = row[4]
-            if row[5] !='':
-                gold = row[5]
-            max_health = row[6]
-            stat_attack = row[7]
-            stat_defence = row[8]
-            print(f'1) Name: {name}\n'
-                f'2) Health: {health}\n'
-                f'3) Attack: {attack}\n'
-                f'4) Defence: {defence}\n'
-                f'5) Inventory: {inventory}\n'
-                f'6) Gold: {gold}\n'
-                f'7) Max Health: {max_health}\n'
-                f'8) Stat Attack: {stat_attack}\n'
-                f'9) Stat Defence{stat_defence})\n')
+            item_number = 0
+            for idx, item in enumerate(row):
+                if item == '':
+                    item = hollow[idx]
+                    print('its empty')
+                    print (hollow[idx])
+                    print (item)
+            print(row)
             line_count += 1
             defaults()
     print(f'Processed {line_count} lines.')
@@ -96,8 +72,3 @@ while choice != 'x':
         print(name)
         name = input('what would you like the name to be? ')
 '''
-
-
-#Save and close
-conn.commit()
-conn.close()
