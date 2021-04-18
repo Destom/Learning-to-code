@@ -1,20 +1,29 @@
+#importing sql DB library namming it lite
 import sqlite3 as lite
-import sys
+
+#setting log level
+log_level='debug'
 
 def get_table(table):
+    print('table value is null running input') if log_level == 'debug' else ''
     if table == 'null':
         return input('what is the table name? ')
     else:
         return table
 def get_fields(fields):
+    print('fileds values are null running input') if log_level == 'debug' else ''
     if fields == 'null':
         return input ('what are the fields(sepperated by a comma)? ')
     else:
         return fields
 def get_values(values):
+    print('values are null running input') if log_level == 'debug' else ''
     if values == 'null':
         values = input ('what are the values(sepperated by a comma)? ')
-        return tuple(values.split(','))
+        if "," in values:
+            return tuple(values.split(','))
+        else:
+            return "('" + values + "')"
     else:
         return values
 
@@ -35,6 +44,7 @@ def test_connection():
     con.close()
 
 def show_tables():
+    print('Getting a list of all tables') if log_level == 'debug' else ''
     con = connect()
     cur = con.cursor()
     cur.execute('SELECT name FROM sqlite_master')
@@ -46,7 +56,9 @@ def check_for_table(table = 'null'):
     table = get_table(table)
     con = connect()
     cur = con.cursor()
-    cur.execute(f'''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{table}' ''')
+    command=f'''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{table}' '''
+    print(f'checking for table by running command: {command}') if log_level == 'debug' else ''
+    cur.execute(command)
     if cur.fetchone()[0]==1:
         return 0
     else:
@@ -59,7 +71,9 @@ def create_table(table = 'null',fields = 'null'):
     if check_for_table(table) == 1:
         con = connect()
         cur = con.cursor()
-        cur.execute(f'create table {table} ({fields})')
+        command = f'create table {table} ({fields})'
+        print(f'table not found creating table with {command}') if log_level == 'debug' else ''
+        cur.execute(command)
         con.close()
         return 0
     else:
@@ -107,13 +121,11 @@ def add_row(table='null',fields='null',values='null'):
     table = get_table(table)
     fields = get_fields(fields)
     values = get_values(values)
-    if type(values)!=tuple:
-        values=tuple(values.split(','))
     con = connect()
     cur = con.cursor()
     if check_for_table(table) == 0:
         command = f'''INSERT INTO {table} ({fields}) VALUES {values}'''
-        print(command)
+        print(f'table found adding row with: {command}') if log_level == 'debug' else ''
         cur.execute(command)
         con.commit()
     con.close()
@@ -138,8 +150,8 @@ def drop_row(table='null',fields='null',values='null'):
     con = connect()
     cur = con.cursor()
     if check_for_table(table) == 0:
-        command = f'''INSERT INTO {table} ({fields}) VALUES {values}'''
-        print(command)
+        command = f'''DELETE FROM {table} WHERE {fields} VALUES {values}'''
+        print(f'table found dropping row with: {command}') if log_level == 'debug' else ''
         cur.execute(command)
         con.commit()
     con.close()

@@ -27,9 +27,9 @@ while choice != 'x':
     elif choice == '5':
         dbmod.view_table()
     elif choice == '6':
-        dbmod.add_row('batman','this,another','value1,value2')
+        dbmod.add_row()
     elif choice == '7':
-        print(dbmod.add_fields('batman', 'anotherone'))
+        print(dbmod.add_fields())
     elif choice == '8':
         print(dbmod.get_values('null'))
     elif choice == 'x':
