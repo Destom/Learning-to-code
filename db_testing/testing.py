@@ -12,25 +12,25 @@ while choice != 'x':
     4) Remove table
     5) View table
     6) add data
+    7) add fields
+    8) test get_values
     x) exit the test lab
     Please make your selection: ''')
     if choice == '1':
-        table = input('what is the table name? ')
-        print (dbmod.check_for_table(table))
+        print (dbmod.check_for_table())
     elif choice == '2':
         print(dbmod.show_tables())
     elif choice == '3':
-        table = input('what is the table name? ')
-        fields = input ('what are the fields(sepperated by a comma)? ')
-        print(dbmod.create_table(table,fields))
+        print(dbmod.create_table())
     elif choice == '4':
-        table = input('what table do you want to remove? ')
-        print(dbmod.delete_table(table))
+        print(dbmod.delete_table())
     elif choice == '5':
-        table = input('what table would you like to invesitgate? ')
-        print(dbmod.show_fields(table))
-        print(dbmod.show_table(table))
+        dbmod.view_table()
     elif choice == '6':
-        dbmod.add_row('batman','(this,that)', ('baterang','grappeling-hook'))
+        dbmod.add_row('batman','this,another','value1,value2')
+    elif choice == '7':
+        print(dbmod.add_fields('batman', 'anotherone'))
+    elif choice == '8':
+        print(dbmod.get_values('null'))
     elif choice == 'x':
         pass
