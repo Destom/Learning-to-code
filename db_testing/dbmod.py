@@ -9,7 +9,7 @@ def logging_func(value):
     options = {'debug':0,
         'info':1}
     return options[value]
-log_level='debug'
+log_level='info'
 logging = logging_func(log_level)
 
 #commands for gatheing variables
@@ -68,7 +68,9 @@ def check_for_table(table = 'null'):
     cur.execute(command)
     if cur.fetchone()[0]==1:
         return 0
+        print(f'found table: {table}') if logging <= 0 else ''
     else:
+        print(f'did not find table: {table}') if logging <= 0 else ''
         return 1
     con.close()
 
@@ -106,9 +108,12 @@ def show_fields(table = 'null'):
             fields.append(i[1])
         return(fields)
     con.close()
+def get_row(table = 'null'):
+    pass
 
 #adding commands
 def create_table(table = 'null',fields = 'null'):
+    print(f'Running create table command') if logging <= 0 else ''
     table = get_table(table)
     fields = get_fields(fields)
     if check_for_table(table) == 1:
@@ -120,6 +125,7 @@ def create_table(table = 'null',fields = 'null'):
         con.close()
         return 0
     else:
+        print(f'table {table} found not creating') if logging <= 0 else ''
         return 1
 def add_fields(table = 'null',fields = 'null'):
     table = get_table(table)
@@ -170,7 +176,7 @@ def drop_row(table='null',fields='null',values='null'):
         con.commit()
     con.close()
 
-#os commands
+#CSV commands
 def get_csvs():
     folder_list = (listdir('./csv_files'))
     csv_list = [ item for item in folder_list if item[-4:]=='.csv']
@@ -189,12 +195,41 @@ def choose_csv():
     result = (csv_dict[int(input('''pick your item(by number): '''))])+'.csv'
     print(f'file chosen {result}') if logging <= 0 else ''
     return result
-def open_csv(file='null'):
+def open_csv(file='null', returning='null'):
     if file == 'null':
         file=choose_csv()
+    if returning == 'null':
+        returning = input('do you want (f)ields or (r)ows?: ')[0].lower()
+        print(f'returning value currently {returning}') if logging <= 0 else ''
     with open(f'./csv_files/{file}', 'r') as file:
         csvreader = csv.reader(file)
-        fields = next(file)
-        print(fields)
-        for row in csvreader:
-            print(row)
+        fields = next(file).strip()
+        if returning == 'f':
+            print(f'returning fields {fields}') if logging <= 0 else ''
+            return fields
+        elif returning == 'r':
+            results = []
+            for row in csvreader:
+                results.append(row)
+            return results
+def print_csv(file='null'):
+    file = choose_csv()
+    print(open_csv(file,'f'))
+    for row in open_csv(file,'r'):
+        print(row)
+
+#the big ones
+def create_table_from_csv(file='null'):
+    if file == 'null':
+        file = choose_csv()
+    table_name = file.removesuffix('.csv')
+    fields = open_csv(file, returning='f')
+    rows = open_csv(file, returning='r')
+    print(f'value for file: {file}') if logging <= 0 else ''
+    print(f'value for table_name: {table_name}') if logging <= 0 else ''
+    print(f'value for fields: {fields}') if logging <= 0 else ''
+    print(f'value for rows: {rows}') if logging <= 0 else ''
+    create_table(table=table_name,fields=fields)
+    for row in rows:
+        row = tuple(row)
+        add_row(table_name,fields,row)

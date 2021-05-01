@@ -8,9 +8,9 @@ print(dbmod.log_level)
 while choice != 'x':
     choice = input('''
     1) Show Tables
-    2) Show options
-    3) Create table from file
-    4)
+    2) View table
+    3) show CSV
+    4) Create table from CSV
     5)
     6)
     7)
@@ -21,13 +21,11 @@ while choice != 'x':
     if choice == '1':
         print(dbmod.show_tables())
     elif choice == '2':
-        print(dbmod.get_csvs())
+        print(dbmod.view_table())
     elif choice == '3':
-        print(dbmod.open_csv())
+        dbmod.print_csv()
     elif choice == '4':
-        dbmod.choose_csv()
-    elif choice == '5':
-        pass
+        dbmod.create_table_from_csv()
     elif choice == '6':
         pass
     elif choice == '7':
