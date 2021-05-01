@@ -1,5 +1,8 @@
 #importing sql DB library namming it lite
 import sqlite3 as lite
+#importing commands to use with fiels
+import csv
+from os import listdir
 
 #setting log level
 def logging_func(value):
@@ -166,3 +169,32 @@ def drop_row(table='null',fields='null',values='null'):
         cur.execute(command)
         con.commit()
     con.close()
+
+#os commands
+def get_csvs():
+    folder_list = (listdir('./csv_files'))
+    csv_list = [ item for item in folder_list if item[-4:]=='.csv']
+    return csv_list
+def choose_csv():
+    csv_dict={}
+    count = 0
+    for csv in get_csvs():
+        count += 1
+        file = csv.removesuffix('.csv')
+        csv_dict[count]=file
+    print('files available for import:')
+    for item in csv_dict:
+        print(f'''{item}:{csv_dict[item]}''')
+    print(f'Current csv_dict is {csv_dict}') if logging <= 0 else ''
+    result = (csv_dict[int(input('''pick your item(by number): '''))])+'.csv'
+    print(f'file chosen {result}') if logging <= 0 else ''
+    return result
+def open_csv(file='null'):
+    if file == 'null':
+        file=choose_csv()
+    with open(f'./csv_files/{file}', 'r') as file:
+        csvreader = csv.reader(file)
+        fields = next(file)
+        print(fields)
+        for row in csvreader:
+            print(row)
