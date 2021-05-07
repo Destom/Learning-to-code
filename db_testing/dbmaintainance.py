@@ -1,6 +1,5 @@
 import dbmod
 
-
 choice=''
 
 print('''welcome to the maintanance environment''')
