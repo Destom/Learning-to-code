@@ -9,7 +9,7 @@ def logging_func(value):
     options = {'debug':0,
         'info':1}
     return options[value]
-log_level='info'
+log_level='debug'
 logging = logging_func(log_level)
 
 #commands for gatheing variables
@@ -108,8 +108,18 @@ def show_fields(table = 'null'):
             fields.append(i[1])
         return(fields)
     con.close()
-def get_row(table = 'null'):
-    pass
+def get_row(field, value, table = 'null'):
+    print(f'Running get row command') if logging <= 0 else ''
+    table = get_table(table)
+    con = connect()
+    cur = con.cursor()
+    if check_for_table(table) == 0:
+        command  = f'''SELECT * FROM {table} WHERE {field}="{value}"; '''
+        print(f'Running command: {command}') if logging <= 0 else ''
+        cur.execute(command)
+        data=cur.fetchone()
+        print(f'Data pulled from table: {data}') if logging <= 0 else ''
+        return data
 
 #adding commands
 def create_table(table = 'null',fields = 'null'):
@@ -217,6 +227,14 @@ def print_csv(file='null'):
     print(open_csv(file,'f'))
     for row in open_csv(file,'r'):
         print(row)
+def populate(fields, row):
+    if file == 'null':
+        file = choose_csv()
+    count =0
+    for item in row:
+        if item == '':
+            print('item')
+        count +=1
 
 #the big ones
 def create_table_from_csv(file='null'):
@@ -231,5 +249,6 @@ def create_table_from_csv(file='null'):
     print(f'value for rows: {rows}') if logging <= 0 else ''
     create_table(table=table_name,fields=fields)
     for row in rows:
+        row = populate(fields, row)
         row = tuple(row)
         add_row(table_name,fields,row)

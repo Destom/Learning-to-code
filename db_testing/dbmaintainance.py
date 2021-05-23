@@ -10,7 +10,7 @@ while choice != 'x':
     2) View table
     3) show CSV
     4) Create table from CSV
-    5)
+    5) view defaults
     6)
     7)
     8)
@@ -25,6 +25,8 @@ while choice != 'x':
         dbmod.print_csv()
     elif choice == '4':
         dbmod.create_table_from_csv()
+    elif choice == '5':
+        dbmod.get_row('name','default', 'monsters')
     elif choice == '6':
         pass
     elif choice == '7':
