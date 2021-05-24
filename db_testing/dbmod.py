@@ -227,17 +227,7 @@ def print_csv(file='null'):
     print(open_csv(file,'f'))
     for row in open_csv(file,'r'):
         print(row)
-def populate(fields, row):
-    if file == 'null':
-        file = choose_csv()
-    count =0
-    for item in row:
-        if item == '':
-            print('item')
-        count +=1
-
-#the big ones
-def create_table_from_csv(file='null'):
+def get_default(file='null'):
     if file == 'null':
         file = choose_csv()
     table_name = file.removesuffix('.csv')
@@ -247,8 +237,33 @@ def create_table_from_csv(file='null'):
     print(f'value for table_name: {table_name}') if logging <= 0 else ''
     print(f'value for fields: {fields}') if logging <= 0 else ''
     print(f'value for rows: {rows}') if logging <= 0 else ''
+    print(f'Looking for defaults') if logging <= 0 else ''
+    defaults = [row for row in rows if row[0] == 'default'][0]
+    print(f'value for defaults: {defaults}') if logging <= 0 else ''
+    return defaults
+
+
+#the big ones
+def create_table_from_csv(file='null'):
+    if file == 'null':
+        file = choose_csv()
+    table_name = file.removesuffix('.csv')
+    fields = open_csv(file, returning='f')
+    rows = open_csv(file, returning='r')
+    defaults = get_default (file=file)
+    print(f'value for file: {file}') if logging <= 0 else ''
+    print(f'value for table_name: {table_name}') if logging <= 0 else ''
+    print(f'value for fields: {fields}') if logging <= 0 else ''
+    print(f'value for rows: {rows}') if logging <= 0 else ''
     create_table(table=table_name,fields=fields)
     for row in rows:
-        row = populate(fields, row)
+        count=0
+        for item in row:
+            if item == '':
+                row[count] = defaults[count]
+                print(f'value for item: {row[count]}') if logging <= 0 else ''
+            count += 1
+        print(f'value for row: {row}') if logging <= 0 else ''
         row = tuple(row)
+        print(f'value for row after tuple command: {row}') if logging <= 0 else ''
         add_row(table_name,fields,row)
