@@ -1,15 +1,14 @@
-#! /usr/bin/python3.7
-
+#! /usr/bin/python3.9
 import actions
-import character_lib
 import item_lib
+import dbmod
 
 choice = ""
 
 while (choice != 'x'):
     print('''What would you like to test?
     1 - arena
-    2 - print character stats
+    2 - print creature stats
     3 - slay ROUS
     4 - enter the store''')
 
@@ -22,12 +21,16 @@ while (choice != 'x'):
         actions.arena()
     elif (choice == '2'):
         actions.wiper()
-        actions.print_status(character_lib.user)
+        creature = dbmod.get_row('name','mouse','creatures')
+        actions.print_status(creature)
     elif (choice == '3'):
         actions.wiper()
         actions.combat_victory(character_lib.ROUS)
     elif (choice == '4'):
         actions.wiper()
         actions.home_store.enter()
+    elif (choice == '5'):
+        opponent = dbmod.get_row('name','mouse','creatures')
+        print(opponent['name'])
     elif (choice == 'x'):
         exit()

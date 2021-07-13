@@ -1,4 +1,4 @@
-import character_lib
+import dbmod
 import item_lib
 import random
 
@@ -39,12 +39,10 @@ I have {self.gold} gold if you would like to sell anything to me''')
 home_store = store('home store',item_lib.inventory_lots,50)
 
 def print_status(character):
-    print('name: ' + character.name)
-    print('health: ' + str(character.health) + '/' + str(character.max_health))
-    print('attack: ' + str(character.attack))
-    print('defence: ' + str(character.defence))
-    print(f'purse currently holds {character.gold}')
-    print(str(character.inventory.item_list))
+    print('name: ' + character['name'])
+    print('health: ' + str(character['health']))
+    print('attack: ' + str(character['attack']))
+    print('defence: ' + str(character['defence']))
     print('')
 
 def combat_attack(attacker,defender):
@@ -92,7 +90,7 @@ def combat_action(opponent):
             print('The ' + opponent.name + ' slayed you. This is the end')
 
 def arena():
-    print ('''welcome to the aren, we have many opponents for you to fight.
+    print (f'''welcome to the aren, we have many opponents for you to fight.
 who would you like to fighh?
     1 - mouse
     2 - Rat
