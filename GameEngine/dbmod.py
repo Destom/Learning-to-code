@@ -1,5 +1,5 @@
-dblocation='objects.db'
-
+db_location='./data_files/objects.db'
+csv_location='./data_files'
 #importing sql DB library namming it lite
 import sqlite3 as lite
 #importing commands to use with fiels
@@ -11,7 +11,7 @@ def logging_func(value):
     options = {'debug':0,
         'info':1}
     return options[value]
-log_level='debug'
+log_level='info'
 logging = logging_func(log_level)
 
 #commands for gatheing variables
@@ -47,7 +47,7 @@ def get_values(values):
         return values
 
 #initial connections and verificaitons
-def connect(db=dblocation):
+def connect_one(db=db_location):
     con = None
     try:
         con = lite.connect(db)
@@ -55,8 +55,15 @@ def connect(db=dblocation):
     except:
         print(lite.Error)
     return con
+def connect_many(db=db_location):
+    con = None
+    try:
+        con = lite.connect(db)
+    except:
+        print(lite.Error)
+    return con
 def test_connection():
-    con = connect()
+    con = connect_many()
     cur = con.cursor()
     cur.execute('SELECT SQLITE_VERSION()')
     data = cur.fetchone()
@@ -64,7 +71,7 @@ def test_connection():
     con.close()
 def check_for_table(table = 'null'):
     table = get_table(table)
-    con = connect()
+    con = connect_many()
     cur = con.cursor()
     command=f'''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{table}' '''
     print(f'checking for table by running command: {command}') if logging <= 0 else ''
@@ -80,7 +87,7 @@ def check_for_table(table = 'null'):
 #Viewing commands
 def show_tables():
     print('Getting a list of all tables') if logging <= 0 else ''
-    con = connect()
+    con = connect_many()
     cur = con.cursor()
     cur.execute('SELECT name FROM sqlite_master')
     data = cur.fetchall()
@@ -93,35 +100,49 @@ def view_table(table='null'):
         print(row)
 def get_table_contents(table = 'null'):
     table = get_table(table)
-    con = connect()
+    con = connect_many()
     cur = con.cursor()
     if check_for_table(table) == 0:
         cur.execute(f'''SELECT * FROM {table} ''')
         return cur.fetchall()
     con.close()
+def get_fields(table = 'null', fields = 'null'):
+    print(f'Running get single column command') if logging <= 0 else ''
+    table = get_table(table)
+    con = connect_many()
+    cur = con.cursor()
+    if check_for_table(table) == 0:
+        command  = f'''SELECT {fields} FROM {table}; '''
+        print(f'Running command: {fields}') if logging <= 0 else ''
+        cur.execute(command)
+        data=cur.fetchall()
+        list = []
+        for row in data:
+             list.append(row[0])
+        return list
 def show_fields(table = 'null'):
     table = get_table(table)
-    con = connect()
+    con = connect_many()
     cur = con.cursor()
     if check_for_table(table) == 0:
         cur.execute(f'''PRAGMA table_info({table})''')
         data = cur.fetchall()
         fields=[]
         for i in data:
-            fields.append(i[1])
+            fields.append(i[0])
         return(fields)
     con.close()
 def get_row(field, value, table = 'null'):
     print(f'Running get row command') if logging <= 0 else ''
     table = get_table(table)
-    con = connect()
+    con = connect_one()
     cur = con.cursor()
     if check_for_table(table) == 0:
         command  = f'''SELECT * FROM {table} WHERE {field}="{value}"; '''
         print(f'Running command: {command}') if logging <= 0 else ''
         cur.execute(command)
         data=cur.fetchone()
-        print(f'Data pulled from table: {data}') if logging <= 0 else ''
+        print(f'Data pulled from table: {data[0:]}') if logging <= 0 else ''
         return data
 
 #adding commands
@@ -130,7 +151,7 @@ def create_table(table = 'null',fields = 'null'):
     table = get_table(table)
     fields = get_fields(fields)
     if check_for_table(table) == 1:
-        con = connect()
+        con = connect_many()
         cur = con.cursor()
         command = f'create table {table} ({fields})'
         print(f'table not found creating table with {command}') if logging <= 0 else ''
@@ -144,7 +165,7 @@ def add_fields(table = 'null',fields = 'null'):
     table = get_table(table)
     fields = get_fields(fields)
     fields = list(fields.split(','))
-    con = connect()
+    con = connect_many()
     cur = con.cursor()
     if check_for_table(table) == 0:
         for field in fields:
@@ -156,7 +177,7 @@ def add_row(table='null',fields='null',values='null'):
     table = get_table(table)
     fields = get_fields(fields)
     values = get_values(values)
-    con = connect()
+    con = connect_many()
     cur = con.cursor()
     if check_for_table(table) == 0:
         command = f'''INSERT INTO {table} ({fields}) VALUES {values}'''
@@ -169,7 +190,7 @@ def add_row(table='null',fields='null',values='null'):
 def delete_table(table = 'null'):
     table = get_table(table)
     if check_for_table(table) == 0:
-        con = connect()
+        con = connect_many()
         cur = con.cursor()
         cur.execute(f'''DROP TABLE '{table}' ''')
         return 0
@@ -180,7 +201,7 @@ def drop_row(table='null',fields='null',values='null'):
     fields = get_fields(fields)
     values = get_values(values)
     values= values.strip('()')
-    con = connect()
+    con = connect_many()
     cur = con.cursor()
     if check_for_table(table) == 0:
         command = f'''DELETE FROM {table} WHERE {fields} like {values}'''
@@ -191,7 +212,7 @@ def drop_row(table='null',fields='null',values='null'):
 
 #CSV commands
 def get_csvs():
-    folder_list = (listdir('../csvfiles'))
+    folder_list = (listdir(csv_location))
     csv_list = [ item for item in folder_list if item[-4:]=='.csv']
     return csv_list
 def choose_csv():
@@ -214,7 +235,7 @@ def open_csv(file='null', returning='null'):
     if returning == 'null':
         returning = input('do you want (f)ields or (r)ows?: ')[0].lower()
         print(f'returning value currently {returning}') if logging <= 0 else ''
-    with open(f'../csvfiles/{file}', 'r') as file:
+    with open(f'{csv_location}/{file}', 'r') as file:
         csvreader = csv.reader(file)
         fields = next(file).strip()
         if returning == 'f':

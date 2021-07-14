@@ -1,0 +1,3 @@
+name,health,max_health,attack,defence
+default,10,10,2,1
+bob,10,10,2,1
