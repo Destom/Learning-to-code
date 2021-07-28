@@ -46,90 +46,83 @@ def print_status(character):
     print('')
 
 def combat_attack(attacker,defender):
-    if (attacker.attack > defender.defence):
-        defender.health -= (attacker.attack - defender.defence)
-    print (str(defender.name) + " health is now " + str(defender.health))
+    if (attacker['attack'] > defender['defence']):
+        defender['health'] = int(defender['health'])
+        defender['health'] -= (int(attacker['attack']) - int(defender['defence']))
+    print (str(defender['name']) + " health is now " + str(defender['health']))
 
 def combat_defence(attacker):
-    attacker.defence += 1
-    print (str(attacker.name) + " defence is now " + str(attacker.defence))
+    attacker['defence'] += 1
+    print ((attacker['name']) + " defence is now " + str(attacker['defence']))
 
 def combat_victory(opponent):
     wiper()
-    print('well done you have vanquished the ' + opponent.name)
-    opponent.health = opponent.max_health
-    combat_reward = random.choice(opponent.inventory.item_list)
-    print (f'for your victory you win {combat_reward}')
-    print (type(combat_reward))
-    if type(combat_reward) == str:
-        character_lib.item_lib.inventory_user.item_list.append(combat_reward)
-    elif type(combat_reward) == int:
-        character_lib.user.gold += combat_reward
+    print('well done you have vanquished the ' + opponent['name'])
+    #combat_reward = random.choice(opponent.inventory.item_list)
+    #print (f'for your victory you win {combat_reward}')
+    #print (type(combat_reward))
+    #if type(combat_reward) == str:
+        #character_lib.item_lib.inventory_user.item_list.append(combat_reward)
+    #elif type(combat_reward) == int:
+        #character_lib.user.gold += combat_reward
 
-def combat_action(opponent):
-    character_lib.user.attack = character_lib.user.stat_attack
-    character_lib.user.defence = character_lib.user.stat_defence
-    while (character_lib.user.health > 0):
+def combat_action(character,opponent):
+    while (int(character['health']) > 0):
         print ("""what would you like to do?
         1 - Attack
         2 - Defend
         3 - Use item""")
         action_choice = str(input("your choice:"))
         if (action_choice == '1'):
-            combat_attack(character_lib.user,opponent)
-            if (opponent.health == 0):
+            combat_attack(character,opponent)
+            if (opponent['health'] == 0):
                 combat_victory(opponent)
                 break
         elif (action_choice == '2'):
-            combat_defence(character_lib.user)
+            combat_defence(character)
         elif (action_choice == '3'):
-            select_item()
-        print ("The " + str(opponent.name) + " attacks")
-        combat_attack(opponent,character_lib.user)
-        if (character_lib.user.health <= 0):
-            print('The ' + opponent.name + ' slayed you. This is the end')
+            select_item(character['items'])
+        print ("The " + opponent['name'] + " attacks")
+        combat_attack(opponent,character)
+        if (character['health'] <= 0):
+            print('The ' + opponent['name'] + ' slayed you. This is the end')
 
-def arena():
-    print (f'''welcome to the aren, we have many opponents for you to fight.
-who would you like to fighh?
-    1 - mouse
-    2 - Rat
-    3 - ROUS''')
+def arena(character):
+    choices = {}
+    count = 0
+    for creature in dbmod.get_field_values(table ='creatures',fields ='name'):
+        count+=1
+        choices[count] = creature
+    print('Creatures available for the arena')
+    for item in choices:
+        print(f'{item}:{choices[item]}')
+    opponent_choice_number = int(input('please select your opponent number: '))
+    opponent = choices[opponent_choice_number]
+    opponent = dbmod.get_row('name',opponent,'creatures')
 
-    opponent_choice = str(input('please select your opponent: '))
-
-    if (opponent_choice == '1'):
-        opponent = character_lib.mouse
-    elif (opponent_choice == '2'):
-        opponent = character_lib.rat
-    elif (opponent_choice == '3'):
-        opponent = character_lib.ROUS
 
     print ("Your opponent is")
     print_status(opponent)
     print ("Your details are")
-    print_status(character_lib.user)
-    combat_action(opponent)
+    print_status(character)
+    combat_action(character,opponent)
 
-def use_item(item_to_use):
-    print("You use " +item_to_use.name+ ":")
-    character_lib.user.max_health += item_to_use.max_health_up
-    if ((character_lib.user.max_health - character_lib.user.health) > item_to_use.health_up):
-        character_lib.user.health +=  item_to_use.health_up
+def use_item(being,item):
+    item = dbmod.get_row('name',item,'items')
+    print(f'''{being['name']} used {item['name']}:''')
+    if ((being['max_'+item['increase']] - being[item['increase']]) > item['increase_value']):
+        being[item['increase']] += item['increase_value']
     else:
-        character_lib.user.health = character_lib.user.max_health
-    item_lib.inventory_user.item_list.remove(item_to_use.name)
-    print_status(character_lib.user)
+        being[item['increase']] = being['max_'+item['increase']]
+    print_status(being)
 
-def select_item():
-    print('in your inventory you have:')
-    print('(1) ' + str(item_lib.inventory_user.item_list.count('potion')) + ' potion(s)')
+def select_item(item_dict):
+    item_dict = dict(item_dict)
+    print('items in your inventory')
+    for item in item_dict:
+        print(f'{item}')
     item_to_use = input('what item would you like to use?:')
-    if (item_to_use == '1'):
-        if (item_lib.inventory_user.item_list.count('potion') >0):
-            use_item(item_lib.potion)
-        else:
-            print("You don't have enough of those")
+
 
 def wiper():
                 for line in range(1,100):

@@ -8,10 +8,10 @@ while choice != 'x':
     choice = input('''
     1) Show Tables
     2) View table
-    3) show CSV
+    3) Show CSV
     4) Create table from CSV
     5) delete table
-    6)
+    6) Recreate table
     7)
     8)
     9)
@@ -28,7 +28,9 @@ while choice != 'x':
     elif choice == '5':
         dbmod.delete_table()
     elif choice == '6':
-        pass
+        csv_choice = dbmod.choose_csv()
+        dbmod.delete_table(csv_choice.removesuffix('.csv'))
+        dbmod.create_table_from_csv(csv_choice)
     elif choice == '7':
         pass
     elif choice == '8':

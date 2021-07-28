@@ -106,7 +106,7 @@ def get_table_contents(table = 'null'):
         cur.execute(f'''SELECT * FROM {table} ''')
         return cur.fetchall()
     con.close()
-def get_fields(table = 'null', fields = 'null'):
+def get_field_values(table = 'null', fields = 'null'):
     print(f'Running get single column command') if logging <= 0 else ''
     table = get_table(table)
     con = connect_many()
@@ -118,7 +118,8 @@ def get_fields(table = 'null', fields = 'null'):
         data=cur.fetchall()
         list = []
         for row in data:
-             list.append(row[0])
+            if row[0] != 'default':
+                list.append(row[0])
         return list
 def show_fields(table = 'null'):
     table = get_table(table)
@@ -143,6 +144,12 @@ def get_row(field, value, table = 'null'):
         cur.execute(command)
         data=cur.fetchone()
         print(f'Data pulled from table: {data[0:]}') if logging <= 0 else ''
+        data = dict(data)
+        for item in data:
+            try:
+                data[item] = int(data[item])
+            except:
+                pass
         return data
 
 #adding commands
