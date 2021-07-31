@@ -1,5 +1,5 @@
-name,description,health,attack,defence
-default,'a hideous beast',10,2,2
-mouse,,2,1,1
-rat,,10,2,1
-ROUS,,15,4,1
+name,description,health,attack,defence,inventory
+default,'a hideous beast',10,2,2,"potion"
+mouse,,2,1,1,
+rat,,10,2,1,
+ROUS,,15,4,1,"potion,super_potion"
