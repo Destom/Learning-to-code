@@ -45,6 +45,11 @@ def print_status(character):
     print('defence: ' + str(character['defence']))
     print('')
 
+def load_being(name,location):
+    temp = dbmod.get_row('name',name,location)
+    temp['items'] = temp['items'].split(',')
+    return temp
+
 def arena(character):
     choices = {}
     count = 0
@@ -56,7 +61,7 @@ def arena(character):
         print(f'{item}:{choices[item]}')
     opponent_choice_number = int(input('please select your opponent number: '))
     opponent = choices[opponent_choice_number]
-    opponent = dbmod.get_row('name',opponent,'creatures')
+    opponent = load_being(opponent,'creatures')
 
 
     print ("Your opponent is")
@@ -90,6 +95,8 @@ def get_item(item_list):
         print(f'{item}: {str(item_dict[item])}')
     item_to_use = input('what item would you like to use?:')
     return item_to_use
+def get_random_item(item_list):
+    pass
 remove_item = lambda being , item: being['items'].remove(item)
 
 ######## Combat ########
@@ -101,16 +108,14 @@ def combat_attack(attacker,defender):
 def combat_defence(attacker):
     attacker['defence'] += 1
     print ((attacker['name']) + " defence is now " + str(attacker['defence']))
-def combat_victory(opponent):
+def combat_victory(victor,opponent):
     wiper()
     print('well done you have vanquished the ' + opponent['name'])
-    #combat_reward = random.choice(opponent.inventory.item_list)
-    #print (f'for your victory you win {combat_reward}')
-    #print (type(combat_reward))
-    #if type(combat_reward) == str:
-        #character_lib.item_lib.inventory_user.item_list.append(combat_reward)
-    #elif type(combat_reward) == int:
-        #character_lib.user.gold += combat_reward
+    #combat_reward = opponent['items']
+    combat_reward = random.choice(opponent['items'])
+    print (f'for your victory you win {combat_reward}')
+    print (f"{victor['items']}")
+    victor['items'].append(combat_reward)
 def combat_action(character,opponent):
     while (int(character['health']) > 0):
         print ("""what would you like to do?

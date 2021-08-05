@@ -2,8 +2,9 @@
 import actions
 import item_lib
 import dbmod
-character=dbmod.get_row('name','bob','saves')
-character['items'] = character['items'].split(',')
+#character=dbmod.get_row('name','bob','saves')
+#character['items'] = character['items'].split(',')
+character = actions.load_being('bob','saves')
 choice = ""
 
 while (choice != 'x'):
@@ -26,7 +27,7 @@ while (choice != 'x'):
         creature = dbmod.get_row('name','mouse','creatures')
         actions.print_status(character)
     elif (choice == '3'):
-        actions.combat_victory(dbmod.get_row('name','ROUS','creatures'))
+        actions.combat_victory(character['name'],actions.load_being('ROUS','creatures'))
     elif (choice == '4'):
         actions.home_store.enter()
     elif (choice == '5'):

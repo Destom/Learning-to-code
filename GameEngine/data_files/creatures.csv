@@ -1,4 +1,4 @@
-name,description,health,attack,defence,inventory
+name,description,health,attack,defence,items
 default,'a hideous beast',10,2,2,"potion"
 mouse,,2,1,1,
 rat,,10,2,1,
